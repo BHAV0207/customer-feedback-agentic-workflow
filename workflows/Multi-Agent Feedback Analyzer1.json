@@ -1,0 +1,520 @@
+{
+  "name": "Multi-Agent Feedback Analyzer1",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Feedback }}",
+        "options": {
+          "systemMessage": "Analyze the feedback and return ONLY JSON:\n\n{\n  \"sentiment\": \"positive | neutral | negative\"\n}\n\nRules:\n- Only one word sentiment\n- No confidence\n- No emotion\n- No explanation"
+        }
+      },
+      "id": "1226ddd1-1dff-4931-94d3-92ffed2c5f22",
+      "name": "Sentiment Analyzer",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        832,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gemini-2.5-flash",
+          "mode": "id"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "id": "31c06e7c-fb71-4168-92bb-59326b66b250",
+      "name": "Sentiment Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        272
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "NLud0PPCFrK0kTQn",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "id": "a94429fd-8331-41a1-8080-aea0b633eab6",
+      "name": "Combine Analysis",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1408,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Feedback }}",
+        "options": {
+          "systemMessage": "Analyze the feedback and return ONLY JSON:\n\n{\n  \"category\": \"one word (shipping, product, support, etc.)\"\n}"
+        }
+      },
+      "id": "031941a0-9788-4363-9f24-8431f58b6854",
+      "name": "Category Classifier",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        832,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gemini-2.5-flash",
+          "mode": "id"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "id": "6e14e9b6-068c-4ac2-a073-b88695246ab8",
+      "name": "Category Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        672
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "NLud0PPCFrK0kTQn",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Feedback }}",
+        "options": {
+          "systemMessage": "You are an insights generator.\n\nAnalyze the feedback and return ONLY valid JSON in this format:\n\n{\n  \"insight\": \"short phrase (max 6 words)\",\n  \"priority\": \"high | medium | low\"\n}\n\nRules:\n- Keep insight very short\n- No lists\n- No explanations\n- No extra text"
+        }
+      },
+      "id": "3e8ea048-98f8-406f-8a7e-de978fa36c8a",
+      "name": "Insights Generator",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        832,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gemini-2.5-flash",
+          "mode": "id"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "id": "da051884-ed21-4d0d-b209-e0704f498473",
+      "name": "Insights Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        1184
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "NLud0PPCFrK0kTQn",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1nHsUD3VPCLPss-iY3XuNPUJvBD20GB_MnISmfUvHRZo",
+          "mode": "list",
+          "cachedResultName": "Customer Feedback Form (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nHsUD3VPCLPss-iY3XuNPUJvBD20GB_MnISmfUvHRZo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2075097007,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nHsUD3VPCLPss-iY3XuNPUJvBD20GB_MnISmfUvHRZo/edit#gid=2075097007"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": 0,
+            "Email": "={{ $(\"Google Sheets Trigger\").item.json[\"Email\"]}}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Feedback",
+              "displayName": "Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rating",
+              "displayName": "Rating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d5580917-db84-476e-a239-815d69f1af09",
+      "name": "Save to Results Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1632,
+        560
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hB7YKWwIoFnS0bQp",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "YOUR PROJECT SETUP - 1. Connect YOUR Google account 2. Select YOUR form responses sheet 3. Customize the AI prompts for YOUR use case 4. Define YOUR own categories 5. Choose where to save YOUR results",
+        "height": 240,
+        "width": 320,
+        "color": 2
+      },
+      "id": "2867de31-b5e1-476f-914e-5cc01939b399",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const cleaned = $json.output\n  .replace(/```json/g, '')\n  .replace(/```/g, '')\n  .trim();\n\nconst result = JSON.parse(cleaned);\n\nreturn [\n  {\n    json: {\n      sentiment: result.sentiment\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        160
+      ],
+      "id": "1234f078-74c8-4e66-a58e-4d93bd881ccd",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const cleaned = item.json.output\n    .replace(/```json/g, '')\n    .replace(/```/g, '')\n    .trim();\n\n  const data = JSON.parse(cleaned);\n\n  return {\n    json: {\n      insight: data.insight,\n      priority: data.priority\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        960
+      ],
+      "id": "33f695e7-94a3-4dad-8cb4-0b40d0d8a164",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const cleaned = item.json.output\n    .replace(/```json/g, '')\n    .replace(/```/g, '')\n    .trim();\n\n  const data = JSON.parse(cleaned);\n\n  return {\n    json: {\n      category: data.category\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        560
+      ],
+      "id": "5a3a3b3b-ba62-45fe-9caa-2801c4612e24",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1nHsUD3VPCLPss-iY3XuNPUJvBD20GB_MnISmfUvHRZo",
+          "mode": "list",
+          "cachedResultName": "Customer Feedback Form (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nHsUD3VPCLPss-iY3XuNPUJvBD20GB_MnISmfUvHRZo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2075097007,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nHsUD3VPCLPss-iY3XuNPUJvBD20GB_MnISmfUvHRZo/edit#gid=2075097007"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        64,
+        384
+      ],
+      "id": "c6821152-1efc-40d6-b97e-0c6c9f1b0876",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "J120LFkSoBKlssio",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// get the LAST row (latest form submission)\nconst latestItem = items[items.length - 1];\n\nreturn [latestItem];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        384
+      ],
+      "id": "c914e067-2838-4546-8b7d-26c9abf4c3ce",
+      "name": "Code in JavaScript3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Sentiment Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analyzer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Analysis": {
+      "main": [
+        [
+          {
+            "node": "Save to Results Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Category Classifier": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Category Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Category Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insights Generator": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insights Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Insights Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Combine Analysis",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Combine Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Combine Analysis",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analyzer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Category Classifier",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Insights Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ef642580-529b-4f01-9e2c-54d9b198323f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9337273ad2d863a222611dc2c9e06ec58ccdb4fdff442028c717b4e588fdb93d"
+  },
+  "id": "ZwMOWL9T6ANPrMYN",
+  "tags": []
+}
