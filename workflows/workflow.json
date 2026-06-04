@@ -164,7 +164,15 @@
           "mappingMode": "defineBelow",
           "value": {
             "row_number": 0,
-            "Email": "={{ $(\"Google Sheets Trigger\").item.json[\"Email\"]}}"
+            "Email": "={{ $(\"Google Sheets Trigger\").item.json[\"Email\"]}}",
+            "Sentiment": "={{ $json.sentiment }}",
+            "Category": "={{ $json.category }}",
+            "Insight": "={{ $json.insight }}",
+            "Priority": "={{ $json.priority }}",
+            "Timestamp": "={{ $(\"Google Sheets Trigger\").item.json[\"Timestamp\"] }}",
+            "Name": "={{ $(\"Google Sheets Trigger\").item.json[\"Name\"] }}",
+            "Rating": "={{ $(\"Google Sheets Trigger\").item.json[\"Rating\"] }}",
+            "Feedback": "={{ $(\"Google Sheets Trigger\").item.json[\"Feedback\"] }}"
           },
           "matchingColumns": [
             "Email"
@@ -216,6 +224,46 @@
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentiment",
+              "displayName": "Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Insight",
+              "displayName": "Insight",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "row_number",
@@ -510,7 +558,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "ef642580-529b-4f01-9e2c-54d9b198323f",
+  "versionId": "bc1ecc45-23e7-4b59-91ac-2c2ee6213b5e",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "9337273ad2d863a222611dc2c9e06ec58ccdb4fdff442028c717b4e588fdb93d"
